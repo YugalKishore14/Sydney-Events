@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, MapPin, ExternalLink } from 'lucide-react';
 
 const EventCard = ({ event, onGetTicket }) => {
+    const placeholderImage = "/placeholder.jpg";
+    const [imgSrc, setImgSrc] = useState(event.imageUrl || placeholderImage);
+
+    const handleError = () => {
+        if (imgSrc !== placeholderImage) {
+            setImgSrc(placeholderImage);
+        }
+    };
+
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
             <div className="h-48 overflow-hidden relative">
                 <img
-                    src={event.imageUrl || 'https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80'}
+                    src={imgSrc}
                     alt={event.title}
+                    onError={handleError}
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold text-primary">
@@ -25,7 +35,7 @@ const EventCard = ({ event, onGetTicket }) => {
                     </div>
                     <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-accent" />
-                        <span className="line-clamp-1">{event.location}</span>
+                        <span className="line-clamp-1">{event.location || event.city || "Sydney"}</span>
                     </div>
                 </div>
 

@@ -1,69 +1,90 @@
-const { chromium } = require('playwright');
-const cheerio = require('cheerio');
-const Event = require('../models/Event');
-const { EVENT_STATUS } = require('../utils/constants');
+const { chromium } = require("playwright");
+const cheerio = require("cheerio");
+const Event = require("../models/Event");
+const { EVENT_STATUS } = require("../utils/constants");
 
 const scrapeEvents = async () => {
-    console.log('Starting scraper...');
-    const browser = await chromium.launch({ headless: true }); // heavily depends on system deps
-    const page = await browser.newPage();
+    console.log("Starting scraper...");
+    console.log("SCRAPER FILE LOADED");
+
+
+    const browser = await chromium.launch({
+        headless: true,
+    });
+
+    const context = await browser.newContext({
+        userAgent:
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+    });
+
+    const page = await context.newPage();
 
     try {
-        // Target: City of Sydney What's On
-        await page.goto('https://whatson.cityofsydney.nsw.gov.au/major-events-and-festivals', { timeout: 60000 });
+        await page.goto(
+            "https://whatson.cityofsydney.nsw.gov.au/major-events-and-festivals",
+            {
+                waitUntil: "domcontentloaded",
+                timeout: 120000,
+            }
+        );
 
-        // Wait for content to load
-        await page.waitForSelector('article', { timeout: 10000 }).catch(() => console.log('Timeout waiting for articles'));
+        // Let JS render cards
+        await page.waitForTimeout(4000);
 
         const content = await page.content();
         const $ = cheerio.load(content);
+
         const eventsToSave = [];
 
-        $('article').each((index, element) => {
-            const title = $(element).find('h3').text().trim();
-            const link = $(element).find('a').attr('href');
-            const description = $(element).find('p').first().text().trim();
-            const image = $(element).find('img').attr('src') || $(element).find('img').attr('data-src');
+        $("article").each((_, element) => {
+            const title = $(element).find("h3").first().text().trim();
+            const relativeLink = $(element).find("a").attr("href");
+            const description = $(element).find("p").first().text().trim();
+            const image =
+                $(element).find("img").attr("src") ||
+                $(element).find("img").attr("data-src");
 
-            // Attempt to extract date/location if available on card
-            // This varies by site design, so fallback to generic or leave blank
-            const dateString = $(element).find('.dates').text().trim() || 'Check details';
-            const location = $(element).find('.location').text().trim() || 'Sydney';
+            if (!title || !relativeLink) return;
 
-            if (title && link) {
-                eventsToSave.push({
-                    externalId: link, // Use link as unique ID
-                    title,
-                    sourceUrl: link.startsWith('http') ? link : `https://whatson.cityofsydney.nsw.gov.au${link}`,
-                    description,
-                    imageUrl: image,
-                    dateString,
-                    location,
-                    date: new Date(), // Placeholder, real scraping would parse dateString
-                });
-            }
+            const sourceUrl = relativeLink.startsWith("http")
+                ? relativeLink
+                : `https://whatson.cityofsydney.nsw.gov.au${relativeLink}`;
+
+            eventsToSave.push({
+                externalId: sourceUrl,
+                title,
+                sourceUrl,
+                description,
+                imageUrl: image,
+                city: "Sydney",
+                venue: "Sydney",
+                date: new Date(), // placeholder
+                lastScrapedAt: new Date(),
+            });
         });
 
-        console.log(`Found ${eventsToSave.length} events.`);
+        console.log(`Found ${eventsToSave.length} events`);
+        console.log("PAGE OPENED");
 
-        // Upsert events
+
         for (const evt of eventsToSave) {
             const existing = await Event.findOne({ externalId: evt.externalId });
 
             if (!existing) {
-                await Event.create({ ...evt, status: EVENT_STATUS.NEW });
-                console.log(`New event: ${evt.title}`);
-            } else {
-                // Optional: Update logic if needed
-                // console.log(`Existing event: ${evt.title}`);
+                await Event.create({
+                    ...evt,
+                    status: EVENT_STATUS.NEW,
+                });
+                console.log(`New event saved: ${evt.title}`);
             }
         }
-
-    } catch (error) {
-        console.error('Scraping failed:', error);
+    } catch (err) {
+        console.error("Scraping failed:", err.message);
     } finally {
         await browser.close();
-        console.log('Scraper finished.');
+        console.log("Scraper finished.");
+        console.log("HTML LENGTH:");
+
     }
 };
 
