@@ -25,7 +25,12 @@ app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        secure: true, // Required for SameSite='none'
+        sameSite: 'none', // Required for cross-site cookies (Backend on Render, Frontend on Vercel/Localhost)
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
