@@ -14,15 +14,15 @@ These are the places where the frontend connects to the backend API.
 - **`client/src/components/Layout.jsx`** // https://sydney-events-backend-lyuu.onrender.com
   - Line 25: `window.location.href = 'https://sydney-events-backend-lyuu.onrender.com/auth/logout';` (Logout redirect)
 
-## Frontend URL (`http://localhost:5173`)
+## Frontend URL (`https://sydney-events-zeta.vercel.app`)
 These are places where the backend refers to the frontend (e.g., for CORS or redirects).
 
 - **`server/index.js`**
-  - Line 22: `app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));`
+  - Line 22: `app.use(cors({ origin: process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app', credentials: true }));`
 
 - **`server/routes/authRoutes.js`**
-  - Line 14: `res.redirect(\`${process.env.CLIENT_URL || 'http://localhost:5173'}/admin/dashboard\`);`
-  - Line 22: `res.redirect(process.env.CLIENT_URL || 'http://localhost:5173');`
+  - Line 14: `res.redirect(\`${process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app'}/admin/dashboard\`);`
+  - Line 22: `res.redirect(process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app');`
 
 ## MongoDB (`mongodb://localhost:27017`)
 Database connection strings.

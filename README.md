@@ -31,7 +31,7 @@ A complete MERN stack application for scraping, managing, and viewing Sydney eve
      GOOGLE_CLIENT_ID=your_google_client_id
      GOOGLE_CLIENT_SECRET=your_google_client_secret
      SESSION_SECRET=your_secret_key
-     CLIENT_URL=http://localhost:5173
+     CLIENT_URL=https://sydney-events-zeta.vercel.app
      ```
 
 3. **Frontend Setup**
@@ -56,8 +56,8 @@ A complete MERN stack application for scraping, managing, and viewing Sydney eve
    ```
 
 3. **Access**
-   - Public: `http://localhost:5173`
-   - Admin: `http://localhost:5173/login`
+   - Public: `https://sydney-events-zeta.vercel.app`
+   - Admin: `https://sydney-events-zeta.vercel.app/login`
 
 ## Deployment
 - Backend: Render/Heroku/Railway
