@@ -21,7 +21,8 @@ const Layout = () => {
     }, [location.pathname]); // Re-check on nav change
 
     const handleLogout = () => {
-        window.location.href = 'http://localhost:5000/auth/logout';
+
+        window.location.href = 'https://sydney-events-backend-lyuu.onrender.com/auth/logout';
     };
 
     return (

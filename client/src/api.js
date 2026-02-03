@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000', // Adjust if port differs
+
+    baseURL: 'https://sydney-events-backend-lyuu.onrender.com',
     withCredentials: true,
 });
 
