@@ -1,3 +1,4 @@
+
 # Sydney Event Platform
 
 A complete MERN stack application for scraping, managing, and viewing Sydney events.
@@ -48,6 +49,7 @@ A complete MERN stack application for scraping, managing, and viewing Sydney eve
    npm start 
    # or node index.js
    ```
+   ./deploy.sh
 
 2. **Start Frontend**
    ```bash

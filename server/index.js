@@ -7,8 +7,10 @@ const session = require('express-session');
 const connectDB = require('./config/db');
 require('./config/passport');
 const { initScheduler } = require('./services/scheduler');
+const path = require('path');
 const eventRoutes = require('./routes/eventRoutes');
 const authRoutes = require('./routes/authRoutes');
+
 // import dotenv from "dotenv";
 // dotenv.config();
 
@@ -42,5 +44,16 @@ app.use('/auth', authRoutes);
 // Initialize Scheduler
 initScheduler();
 
+// Serve frontend build
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
