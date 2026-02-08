@@ -22,15 +22,15 @@ app.set('trust proxy', 1);
 connectDB();
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app', credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5000', credentials: true }));
 app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true, // Required for SameSite='none'
-        sameSite: 'none', // Required for cross-site cookies (Backend on Render, Frontend on Vercel/Localhost)
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));

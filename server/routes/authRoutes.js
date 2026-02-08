@@ -11,7 +11,8 @@ router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
         // Successful authentication, redirect to admin dashboard
-        res.redirect(`${process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app'}/admin/dashboard`);
+        // res.redirect(`${process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app'}/admin/dashboard`);
+        res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5000'}/admin/dashboard`);
     }
 );
 
@@ -19,7 +20,8 @@ router.get('/google/callback',
 router.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) { return next(err); }
-        res.redirect(process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app');
+        // res.redirect(process.env.CLIENT_URL || 'https://sydney-events-zeta.vercel.app');
+        res.redirect(process.env.CLIENT_URL || 'http://localhost:5000');
     });
 });
 

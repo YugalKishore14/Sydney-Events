@@ -22,7 +22,8 @@ const Layout = () => {
 
     const handleLogout = () => {
 
-        window.location.href = 'https://sydney-events-backend-lyuu.onrender.com/auth/logout';
+        // window.location.href = 'https://sydney-events-backend-lyuu.onrender.com/auth/logout';
+        window.location.href = 'http://localhost:5000/auth/logout';
     };
 
     return (
